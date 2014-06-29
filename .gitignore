@@ -1,0 +1,9 @@
+# Database-credentials #
+########
+connect.php
+
+# Slim framework #
+Slim/*
+
+# Other files #
+simple_html_dom.php
