@@ -5,5 +5,10 @@ connect.php
 # Slim framework #
 Slim/*
 
+# Slim framework - if using Composer #
+vendor/*
+composer.phar
+composer.lock
+
 # Other files #
 simple_html_dom.php

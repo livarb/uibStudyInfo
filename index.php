@@ -1,8 +1,11 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 
-require 'Slim/Slim.php';
-\Slim\Slim::registerAutoloader();
+// Uncomment this for manual Slim installation
+// require 'Slim/Slim.php';
+// \Slim\Slim::registerAutoloader();
+
+require 'vendor/autoload.php';
 
 $app = new \Slim\Slim(array(
     'debug' => true
@@ -39,7 +42,7 @@ $app->get('/visste_du/', function () use ($app, $settings) {
 		");
 	
 	while(($resultArray[] = mysql_fetch_assoc($result)) || array_pop($resultArray));
-	
+
 	$time_end = microtime(true);
 	$time = number_format($time_end - $time_start, 4);
 	$app->response()->header('Query-time', $time);

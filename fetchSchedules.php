@@ -83,7 +83,7 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 	
 	if (isset($subjectsByNUS_data["emner"])) {
 		foreach ($subjectsByNUS_data["emner"] as $subject) {
-			// if (substr($subject["id"], 0, 3) === "INF" && is_numeric(substr($subject["id"], 3, 1)) ) {
+			if (substr($subject["id"], 0, 3) === "INF" && is_numeric(substr($subject["id"], 3, 1)) ) {
 				// print ($subject["id"] . "  " . $subject["title_no"] . "\n");
 
 				// print_r($subject);
@@ -138,7 +138,7 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 				// time_nanosleep(0, 050000000); // 0,05 second
 
 				set_time_limit(10); // so the PHP-script doesn't time out
-			// } // if - restriction on subjects
+			} // if - restriction on subjects
 		}
 	} else {
 		// print "No subjects under this NUS-code.\n";

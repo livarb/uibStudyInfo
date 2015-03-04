@@ -2,6 +2,8 @@
 // (C) Livar Bergheim - livar.bergheim@gmail.com
 // june 2014
 
+require('lib.php'); // library for common functions
+
 $time_start = microtime(true); // start measuring run-time of script
 
 header('Content-Type: text/html; charset=utf-8'); // utf8 for norwegian characters outputted correctly in runtime output
@@ -47,24 +49,6 @@ function updateStudyprogramme($id, $field, $data, $settings, $mysqli) {
 			$id);
 		$stmt->execute();
 	}
-}
-
-// http://es1.php.net/manual/en/function.strip-tags.php#110280
-// better than strip_tags() because "<p>Mål</p>Dette er" --> "Mål Dette er"
-// would be "MålDette er" with strip_tags
-function rip_tags($string) {    
-    // ----- remove HTML TAGs ----- 
-    $string = preg_replace ('/<[^>]*>/', ' ', $string); 
-    
-    // ----- remove control characters ----- 
-    $string = str_replace("\r", '', $string);    // --- replace with empty space
-    $string = str_replace("\n", ' ', $string);   // --- replace with space
-    $string = str_replace("\t", ' ', $string);   // --- replace with space
-    
-    // ----- remove multiple spaces ----- 
-    $string = trim(preg_replace('/ {2,}/', ' ', $string));
-    
-    return $string; 
 }
 
 $nus_codes_raw = file_get_contents("https://fs-pres.data.uib.no/" . $settings["apikey"] . "/fag/info.json");
