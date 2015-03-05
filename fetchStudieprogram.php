@@ -157,7 +157,7 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 							$text = rip_tags($textValue);
 							$max["sp_obligat"] = max($max["sp_obligat"], strlen($text));
 							if (strlen($text) > 0) {
-								updateStudyprogramme($studyprogramme["id"], "sp_obligat", $text, $settings, $mysqli);								
+								updateStudyprogramme($studyprogramme["id"], "sp_obligat", $text, $settings, $mysqli);				
 								
 								// NB. Will not match subjects with ids like PRAKTINF, subjects with '/' in names etc.
 								$matches = array();

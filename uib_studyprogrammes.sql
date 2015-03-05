@@ -1,12 +1,6 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
-
 CREATE TABLE IF NOT EXISTS `uib_studyprogrammes` (
   `id` varchar(32) NOT NULL,
   `category` varchar(64) NOT NULL,
@@ -26,11 +20,11 @@ CREATE TABLE IF NOT EXISTS `uib_studyprogrammes` (
   `sp_utbytte` text,
   `pictureURL` varchar(256) DEFAULT NULL,
   `sp_obligat` text,
-  `emner` varchar(512) DEFAULT NULL,
-  KEY `id` (`id`),
-  KEY `title_no` (`title_no`)
+  `emner` varchar(512) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Indexes for table `uib_studyprogrammes`
+--
+ALTER TABLE `uib_studyprogrammes`
+ ADD UNIQUE KEY `id_2` (`id`), ADD KEY `id` (`id`), ADD KEY `title_no` (`title_no`);

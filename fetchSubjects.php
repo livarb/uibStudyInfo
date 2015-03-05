@@ -18,8 +18,19 @@ require('lib.php'); // library for common functions
 // SETTINGS
 // $settings["apikey"] = "";
 $settings["table"] = "uib_subjects";
-$settings["doSQL"] = false; // turn on/off performing SQL-queries
-$settings["limit"] = 5; // set low, e.g. 5, for testing purposes. ca. 2100 subjects at UiB pr 2014-06-10
+$settings["doSQL"] = true; // turn on/off performing SQL-queries
+$settings["limit"] = 3000; // set low, e.g. 5, for testing purposes. ca. 2100 subjects at UiB pr 2014-06-10
+$settings["infotypes"] = array(
+	"eb_innhold", 
+	"eb_utbytte", 
+	"eb_undsem", 
+	"eb_ekssem", 
+	"eb_niva", 
+	"eb_institu", 
+	"eb_krav", 
+	"eb_anbkrav", 
+	"eb_fagovl",
+	"eb_obligat");
 
 // DB TILKOBLING - MySQLI
 $mysqli = new mysqli($hostname, $brukar, $passord, $database) or die("MySQLI fungerar ikkje...");
@@ -57,12 +68,12 @@ $nus_codes_data = json_decode($nus_codes_raw, true);
 
 $subjects_counter = 0;
 $study_points_counter = 0;
-$max["eb_innhold"] = 0;
-$max["eb_utbytte"] = 0;
-$max["eb_undsem"] = 0;
-$max["eb_krav"] = 0;
-$max["eb_anbkrav"] = 0;
-$max["eb_fagovl"] = 0;
+$max["title_no"] = 0;
+$max["title_en"] = 0;
+$max["id"] = 0;
+foreach ($settings["infotypes"] as $infotype) {
+	$max[$infotype] = 0;
+}
 
 if (count($nus_codes_data) < 5) {
 	die("Didn't get any NUS codes from UiB..\nOpen data service down at the moment?");
@@ -76,8 +87,9 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 	// print_r($subjectsByNUS_data);
 	
 	if (isset($subjectsByNUS_data["emner"])) {
+		// print "I can has subjects!\n";
 		foreach ($subjectsByNUS_data["emner"] as $subject) {
-			if ($subject["category"] == "emne") {
+			// if ($subject["category"] == "emne") {
 				print ($subject["id"] . "  " . $subject["title_no"] . "\n");
 							
 				$max["title_no"] = max($max["title_no"], strlen($subject["title_no"]));
@@ -98,46 +110,14 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 				// print_r($subjectTexts_data);
 				// print (count($subjectTexts_data[0]["#items"]) . "\n");
 				foreach ($subjectTexts_data[0]["#items"] as $subjectTextItem) {
-					switch($subjectTextItem["#type"]) {
-						case "EB_INNHOLD":
-							$text = rip_tags($subjectTextItem["#text"]);
-							$max["eb_innhold"] = max($max["eb_innhold"], strlen($text));
-							if (strlen($text) > 0)
-							updateSubject($subject["id"], "eb_innhold", $text, $settings, $mysqli);
-							break;
-						case "EB_UTBYTTE":
-							$text = rip_tags($subjectTextItem["#text"]);
-							$max["eb_utbytte"] = max($max["eb_utbytte"], strlen($text));
-							if (strlen($text) > 0)
-							updateSubject($subject["id"], "eb_utbytte", $text, $settings, $mysqli);
-							break;
-						case "EB_UNDSEM":
-							$text = rip_tags($subjectTextItem["#text"]);
-							$max["eb_undsem"] = max($max["eb_undsem"], strlen($text));
-							if (strlen($text) > 0)
-							updateSubject($subject["id"], "eb_undsem", $text, $settings, $mysqli);
-							break;
-						case "EB_KRAV":
-							$text = rip_tags($subjectTextItem["#text"]);
-							$max["eb_krav"] = max($max["eb_krav"], strlen($text));
-							if (strlen($text) > 0)
-							updateSubject($subject["id"], "eb_krav", $text, $settings, $mysqli);
-							break;
-						case "EB_ANBKRAV":
-							$text = rip_tags($subjectTextItem["#text"]);
-							$max["eb_anbkrav"] = max($max["eb_anbkrav"], strlen($text));
-							if (strlen($text) > 0)
-							updateSubject($subject["id"], "eb_anbkrav", $text, $settings, $mysqli);
-							break;							
-						case "EB_FAGOVL":
-							$text = rip_tags($subjectTextItem["#text"]);
-							$max["eb_fagovl"] = max($max["eb_fagovl"], strlen($text));
-							if (strlen($text) > 0)
-							updateSubject($subject["id"], "eb_fagovl", $text, $settings, $mysqli);
-							break;							
+					$sItem = strtolower($subjectTextItem["#type"]);
+					if (in_array($sItem, $settings["infotypes"])) {
+						$text = rip_tags($subjectTextItem["#text"]);
+						$max[$sItem] = max($max[$sItem], strlen($text));
+						if (strlen($text) > 0)
+							updateSubject($subject["id"], $sItem, $text, $settings, $mysqli);
 					}
 				}
-				
 				// print ("\n\n");
 				}
 				
@@ -151,9 +131,9 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 				}
 				
 				flush(); // flush output (to receiver/browser)
-				sleep(1); // give UiB's API a 1 second break between subjects
+				// time_nanosleep(0, 100000000); // 0,5 second break
 				set_time_limit(10); // so the PHP-script doesn't time out
-			}
+			// }
 		}
 	} else {
 		print "No subjects under this NUS-code.\n";
