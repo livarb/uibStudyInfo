@@ -31,6 +31,9 @@ $settings["infotypes"] = array(
 	"eb_anbkrav", 
 	"eb_fagovl",
 	"eb_obligat");
+$settings["raw_suffix"] = "_raw";
+$settings["infotypes_raw"] = array(
+	"eb_utbytte");
 
 // DB TILKOBLING - MySQLI
 $mysqli = new mysqli($hostname, $brukar, $passord, $database) or die("MySQLI fungerar ikkje...");
@@ -114,8 +117,12 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 					if (in_array($sItem, $settings["infotypes"])) {
 						$text = rip_tags($subjectTextItem["#text"]);
 						$max[$sItem] = max($max[$sItem], strlen($text));
-						if (strlen($text) > 0)
+						if (strlen($text) > 0) {
 							updateSubject($subject["id"], $sItem, $text, $settings, $mysqli);
+							if (in_array($sItem, $settings["infotypes_raw"])) { // optionally stores raw text with any HTML-formatting
+								updateSubject($subject["id"], $sItem . $settings["raw_suffix"], $subjectTextItem["#text"], $settings, $mysqli);
+							}
+						}
 					}
 				}
 				// print ("\n\n");
@@ -131,7 +138,7 @@ foreach ($nus_codes_data as $nus_code => $nus_text) {
 				}
 				
 				flush(); // flush output (to receiver/browser)
-				// time_nanosleep(0, 100000000); // 0,5 second break
+				time_nanosleep(0, 300000000); // 0,3 second break
 				set_time_limit(10); // so the PHP-script doesn't time out
 			// }
 		}
