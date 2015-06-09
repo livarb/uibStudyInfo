@@ -12,3 +12,4 @@ composer.lock
 
 # Other files #
 simple_html_dom.php
+.DS_Store
