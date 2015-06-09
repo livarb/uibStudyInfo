@@ -15,6 +15,12 @@ include('connect.php');
 
 require('lib.php'); // library for common functions
 
+// Make tables if they don't exists
+
+$command = "mysql -u{$settings['user']} -p{$settings['password']} " . "-h {$settings['hostname']} -D {$settings['database']} < ";
+
+shell_exec($command . 'uib_subjects.sql');
+
 // SETTINGS
 // $settings["apikey"] = "";
 $settings["table"] = "uib_subjects";
@@ -36,7 +42,7 @@ $settings["infotypes_raw"] = array(
 	"eb_utbytte");
 
 // DB TILKOBLING - MySQLI
-$mysqli = new mysqli($hostname, $brukar, $passord, $database) or die("MySQLI fungerar ikkje...");
+$mysqli = new mysqli($settings["hostname"], $settings["user"], $settings["password"], $settings["database"]) or die("MySQLI fungerar ikkje...");
 $mysqli->set_charset("utf8");
 
 // CLEAR TABLE
