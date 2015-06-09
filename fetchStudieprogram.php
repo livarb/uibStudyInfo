@@ -16,7 +16,7 @@ include('connect.php');
 
 $command = "mysql -u{$settings['user']} -p{$settings['password']} " . "-h {$settings['hostname']} -D {$settings['database']} < ";
 
-shell_exec($command . 'uib_subjects.sql');
+shell_exec($command . 'uib_studyprogrammes.sql');
 
 // SETTINGS
 // $settings["apikey"] = ""; // or place it in connect.php
