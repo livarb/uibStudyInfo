@@ -12,6 +12,12 @@ header('Content-Type: text/html; charset=utf-8'); // utf8 for norwegian characte
 // see sample-connect.php
 include('connect.php');
 
+// Make tables if they don't exists
+
+$command = "mysql -u{$settings['user']} -p{$settings['password']} " . "-h {$settings['hostname']} -D {$settings['database']} < ";
+
+shell_exec($command . 'uib_subjects.sql');
+
 // SETTINGS
 // $settings["apikey"] = ""; // or place it in connect.php
 $settings["table"] = "uib_studyprogrammes";
@@ -19,7 +25,7 @@ $settings["doSQL"] = false; // turn on/off performing SQL-queries. For testing
 $settings["limit"] = 500; // set low, e.g. 5, for testing purposes. 195 study programmes at UiB pr 2014-06-10
 
 // DB TILKOBLING - type MySQLI
-$mysqli = new mysqli($hostname, $brukar, $passord, $database) or die("MySQLI fungerar ikkje...");
+$mysqli = new mysqli($settings["hostname"], $settings["user"], $settings["password"], $settings["database"]) or die("MySQLI fungerar ikkje...");
 $mysqli->set_charset("utf8");
 
 // CLEAR TABLE
